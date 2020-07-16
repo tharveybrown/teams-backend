@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get '/auth/slack/callback', to: 'sessions#create'
+  get "/auth/:provider/callback" => 'sessions#create'
   resources :reviews
   resources :skills
   resources :employees
