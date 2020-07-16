@@ -56,6 +56,7 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
       zeitwerk (~> 2.2, >= 2.2.2)
+    bcrypt (3.1.13)
     async (1.26.2)
       console (~> 1.0)
       nio4r (~> 2.3)
@@ -125,6 +126,7 @@ GEM
     hashie (4.1.0)
     i18n (1.8.3)
       concurrent-ruby (~> 1.0)
+    jwt (2.2.1)
     kaminari-core (1.2.1)
     kaminari-grape (1.0.1)
       grape
@@ -254,13 +256,16 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.2)
   byebug
+  jwt
   figaro
   listen (~> 3.2)
   pg (>= 0.18, < 2.0)
   pry
   puma (~> 4.1)
+  rack-cors
   rails (~> 6.0.3, >= 6.0.3.2)
   slack-ruby-bot
   slack-ruby-bot-server
