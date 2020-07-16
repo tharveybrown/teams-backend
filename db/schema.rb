@@ -52,7 +52,15 @@ ActiveRecord::Schema.define(version: 2020_07_15_200114) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "slack_teams", force: :cascade do |t|
+    t.string "slack_id"
+    t.string "name"
+    t.bigint "organization_id", null: false
+    t.index ["organization_id"], name: "index_slack_teams_on_organization_id"
+  end
+
   add_foreign_key "employees", "employees", column: "manager_id"
   add_foreign_key "employees", "organizations"
   add_foreign_key "reviews", "employees"
+  add_foreign_key "slack_teams", "organizations"
 end

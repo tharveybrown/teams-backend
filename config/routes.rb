@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   post "/employees", to: "employees#create"
   # resources :reviews
   # resources :skills
+  get "/auth/:provider/callback" => 'sessions#create'
+  resources :reviews
+  resources :skills
   resources :employees
   resources :organizations
   
