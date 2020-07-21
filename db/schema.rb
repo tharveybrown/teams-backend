@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_200114) do
+ActiveRecord::Schema.define(version: 2020_07_20_215459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,13 @@ ActiveRecord::Schema.define(version: 2020_07_15_200114) do
     t.string "password_digest"
     t.index ["manager_id"], name: "index_employees_on_manager_id"
     t.index ["organization_id"], name: "index_employees_on_organization_id"
+  end
+
+  create_table "employees_skills", id: false, force: :cascade do |t|
+    t.bigint "employee_id"
+    t.bigint "skill_id"
+    t.index ["employee_id"], name: "index_employees_skills_on_employee_id"
+    t.index ["skill_id"], name: "index_employees_skills_on_skill_id"
   end
 
   create_table "organizations", force: :cascade do |t|

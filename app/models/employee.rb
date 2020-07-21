@@ -7,5 +7,10 @@ class Employee < ApplicationRecord
   belongs_to :organization, optional: true
   has_many :reviews
   has_and_belongs_to_many :skills
-  # validates :email, uniqueness: true
+  accepts_nested_attributes_for :skills
+  validates :email, uniqueness: true, presence: true
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+  
+  
 end

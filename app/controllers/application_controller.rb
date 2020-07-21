@@ -1,6 +1,6 @@
-require 'pry'
 class ApplicationController < ActionController::API
   before_action :require_login
+
 
   def encode_token(payload)
       JWT.encode(payload, 'my_secret')
@@ -23,6 +23,7 @@ class ApplicationController < ActionController::API
 
   def session_user
       decoded_hash = decoded_token
+      
       if !decoded_hash.empty? 
           puts decoded_hash.class
           employee_id = decoded_hash[0]['employee_id']
@@ -32,9 +33,18 @@ class ApplicationController < ActionController::API
       end
   end
 
+  def login!(employee)
+    session[:employee_id] = employee.id
+  end
+
   def logged_in?
       !!session_user
   end
+  def logout!
+    session.clear
+  end
+
+ 
 
   def require_login
    render json: {message: 'Please Login'}, status: :unauthorized unless logged_in?
