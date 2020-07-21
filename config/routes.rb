@@ -3,9 +3,10 @@ Rails.application.routes.draw do
   get "/auto_login", to: "auth#auto_login"
   get "/user_is_authed", to: "auth#user_is_authed"
   post "/employees", to: "employees#create"
+  get "/begin_auth", to: "sessions#begin_auth"
   # resources :reviews
   # resources :skills
-  get "/auth/:provider/callback" => 'sessions#create'
+  get "/auth/callback" => 'sessions#create'
   resources :reviews
   resources :skills
   resources :employees
