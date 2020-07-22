@@ -7,19 +7,22 @@ class AuthController < ApplicationController
         login!(employee)
         payload = {employee_id: employee.id}
         token = encode_token(payload)
-        session[:employee] = employee
-        render json: {employee: employee, jwt: token, success: "Welcome back, #{employee.first_name}"}
-    else
-      render json: {errors: ['no such user', 'verify credentials and try again or signup']}, status: 401
-      
-    end
-  end
 
-  def auto_login
-    if session_user
-      
-      session[:employee_id] = session_user[:id]
-      render json: session_user
+        render json: {employee: employee, organization: employee.organization, jwt: token, success: "Welcome back, #{employee.first_name}"}
+      else
+        render json: {errors: ['no such user', 'verify credentials and try again or signup']}, status: 401
+      end
+    end
+    
+    def auto_login
+      if session_user
+        
+        render json: session_user.to_json(:include => 
+          {:slack_team => 
+            {:only=> [:id, :slack_id, :name]}, 
+          :organization => 
+          {:only => [:name]}}
+        )
     else
       render json: {
         logged_in: false,

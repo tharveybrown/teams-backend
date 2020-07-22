@@ -1,17 +1,6 @@
 require 'net/http'
 class SessionsController < ApplicationController
-  skip_before_action :require_login, only: [ :create, :begin_auth]
-
-   # Note that we pass the `client_id`, `scope` and "redirect_uri" parameters specific to our application's configs.
-
-
-  # If a user tries to access the index page, redirect them to the auth start page
-  
-
-  # OAuth Step 1: Show the "Add to Slack" button, which links to Slack's auth request page.
-  # This page shows the user what our app would like to access and what bot user we'd like to create for their team.
-  
-
+  skip_before_action :require_login, only: [ :create]
 
   def create
     temp_code = request.query_parameters[:code]
@@ -22,11 +11,23 @@ class SessionsController < ApplicationController
     # @employee = Employee.find_or_create_by(full_name: auth_hash.info.name, member_id: auth_hash.info.user_id)
     response = JSON.parse(res.body)
     access_token = response['access_token']
-
+    @employee = Employee.find(session_user[:id])
+    @employee.access_token = access_token
+    
     slack_team = SlackTeam.find_or_create_by(slack_id: response['team']['id'], name: response['team']['name'], organization_id: session_user.organization.id)
-    slack_team.fetch_channels(access_token)
-    render json: {slack: slack_team, slack_token: access_token}
-    # redirect_back fallback_location: 'http://localhost:3000', allow_other_host: true #, { response }
+    channels = slack_team.fetch_channels(access_token)['channels'].map{|channel| {name: channel['name'], id: channel['id'], is_private: channel['is_private']}}
+    users = slack_team.users(access_token)
+    slack_users = users.map{|user| {email: user['profile']['email'], id: user['id'], image: user['profile']['image_72'] , is_admin: user['profile']['is_admin'], slack_team_id: user['team_id'], is_employee: !!Employee.find_by(email:user['profile']['email'] )}}
+    render json: {slack: slack_team, slack_token: access_token, slack_users: slack_users, channels: channels}
+  end
+
+  def users
+    slack_team = session_user.slack_team
+    users = slack_team.users(session_user.access_token)
+    users = slack_team.users(session_user['access_token'])
+    slack_users = users.map{|user| {email: user['profile']['email'], id: user['id'], image: user['profile']['image_72'] , is_admin: user['profile']['is_admin'], slack_team_id: user['team_id'], is_employee: !!Employee.find_by(email:user['profile']['email'] )}}
+    channels = slack_team.fetch_channels(session_user['access_token'])['channels'].map{|channel| {name: channel['name'], id: channel['id'], is_private: channel['is_private']}}
+    render json: {slack: slack_team, slack_users: slack_users, channels: channels}
   end
 
  

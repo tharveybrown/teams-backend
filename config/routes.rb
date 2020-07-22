@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get "/auto_login", to: "auth#auto_login"
   get "/user_is_authed", to: "auth#user_is_authed"
   post "/employees", to: "employees#create"
-  get "/begin_auth", to: "sessions#begin_auth"
+  get "/slack/users", to: "sessions#users"
   # resources :reviews
   # resources :skills
   get "/auth/callback" => 'sessions#create'

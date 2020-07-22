@@ -27,7 +27,7 @@ class ApplicationController < ActionController::API
       if !decoded_hash.empty? 
           puts decoded_hash.class
           employee_id = decoded_hash[0]['employee_id']
-          @employee_id = Employee.find_by(id: employee_id)
+          @employee = Employee.find_by(id: employee_id)
       else
           nil 
       end
