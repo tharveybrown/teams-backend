@@ -2,17 +2,6 @@ require 'net/http'
 class SessionsController < ApplicationController
   skip_before_action :require_login, only: [ :create]
 
-   # Note that we pass the `client_id`, `scope` and "redirect_uri" parameters specific to our application's configs.
-
-
-  # If a user tries to access the index page, redirect them to the auth start page
-  
-
-  # OAuth Step 1: Show the "Add to Slack" button, which links to Slack's auth request page.
-  # This page shows the user what our app would like to access and what bot user we'd like to create for their team.
-  
-
-
   def create
     temp_code = request.query_parameters[:code]
     uri = URI('https://slack.com/api/oauth.v2.access')
@@ -38,8 +27,7 @@ class SessionsController < ApplicationController
     users = slack_team.users(session_user['access_token'])
     slack_users = users.map{|user| {email: user['profile']['email'], id: user['id'], image: user['profile']['image_72'] , is_admin: user['profile']['is_admin'], slack_team_id: user['team_id'], is_employee: !!Employee.find_by(email:user['profile']['email'] )}}
     channels = slack_team.fetch_channels(session_user['access_token'])['channels'].map{|channel| {name: channel['name'], id: channel['id'], is_private: channel['is_private']}}
-    render json: {slack: slack_team, slack_users: slack_users, channels: channels}   
-
+    render json: {slack: slack_team, slack_users: slack_users, channels: channels}
   end
 
  
