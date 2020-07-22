@@ -19,7 +19,7 @@ class AuthController < ApplicationController
     if session_user
       
       session[:employee_id] = session_user[:id]
-      render json: session_user
+      render json: session_user.to_json(:include => {:slack_team => {:only=> [:id, :slack_id, :name]} })
     else
       render json: {
         logged_in: false,
