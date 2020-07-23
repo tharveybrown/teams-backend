@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get "/auth/callback", to: 'sessions#create'
   get "/feedback/received", to: "reviews#received"
   get "/feedback/given", to: "reviews#given"
+  post "/feedback/request", to: "reviews#request_feedback"
   resources :reviews
   resources :skills
   resources :employees
