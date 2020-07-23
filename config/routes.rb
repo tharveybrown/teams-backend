@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   get "/coworkers", to: "employees#index"
   # resources :reviews
   # resources :skills
-  get "/auth/callback" => 'sessions#create'
+  get "/auth/callback", to: 'sessions#create'
+  get "/feedback/received", to: "reviews#received"
+  get "/feedback/given", to: "reviews#given"
   resources :reviews
   resources :skills
   resources :employees

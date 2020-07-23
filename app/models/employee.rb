@@ -12,6 +12,8 @@ class Employee < ApplicationRecord
   has_one :slack_team, through: :organization
   
   accepts_nested_attributes_for :skills
+  # accepts_nested_attributes_for :given_reviews
+  # accepts_nested_attributes_for :received_reviews
   validates :email, uniqueness: true, presence: true
   validates :first_name, presence: true
   validates :last_name, presence: true

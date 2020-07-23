@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_22_223153) do
+ActiveRecord::Schema.define(version: 2020_07_22_233955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 2020_07_22_223153) do
     t.integer "reviewer_id"
     t.integer "reviewed_id"
     t.boolean "pending"
+    t.integer "rating"
+    t.string "skill"
   end
 
   create_table "skills", force: :cascade do |t|
