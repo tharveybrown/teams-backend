@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
   def create
     temp_code = request.query_parameters[:code]
     uri = URI('https://slack.com/api/oauth.v2.access')
-    params = { :client_id => ENV['SLACK_CLIENT_ID'], :client_secret => ENV['SLACK_CLIENT_SECRET'], code: temp_code, redirect_uri: "http://localhost:3000/dashboard" }
+    params = { :client_id => ENV['SLACK_CLIENT_ID'], :client_secret => ENV['SLACK_CLIENT_SECRET'], code: temp_code, redirect_uri: ENV['FRONTEND_URL'] }
     uri.query = URI.encode_www_form(params)
     res = Net::HTTP.get_response(uri)
     # @employee = Employee.find_or_create_by(full_name: auth_hash.info.name, member_id: auth_hash.info.user_id)
