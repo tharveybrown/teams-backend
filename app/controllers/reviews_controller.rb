@@ -3,7 +3,8 @@ class ReviewsController < ApplicationController
   def create
     reviewed_employee = Employee.find(params['targetEmployee']['id'])
     reviewer_employee = session_user
-    review = session_user.given_reviews.create(reviewed_id: params['targetEmployee']['id'], description: params[:feedback], skill: params['skill'], pending: false)
+    
+    review = session_user.given_reviews.create(reviewed_id: params['targetEmployee']['id'], rating: params['rating'], description: params['feedback'], skill: params['skill'], pending: false)
     if review
       render json: review
     else
