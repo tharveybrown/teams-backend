@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_22_233955) do
+ActiveRecord::Schema.define(version: 2020_07_23_232902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 2020_07_22_233955) do
     t.string "slack_id"
     t.string "name"
     t.integer "organization_id"
+    t.string "bot_token"
     t.index ["organization_id"], name: "index_slack_teams_on_organization_id"
   end
 

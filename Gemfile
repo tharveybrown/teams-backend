@@ -23,7 +23,7 @@ gem 'puma', '~> 4.1'
 gem 'bcrypt', '~> 3.1.7'
 gem 'jwt'
 gem 'faraday'
-
+gem 'thin'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 gem 'figaro'

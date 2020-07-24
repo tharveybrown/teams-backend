@@ -12,18 +12,19 @@ class EmployeesController < ApplicationController
   end
 
   def create
-    @employee = Employee.create(first_name: params[:first_name], email: params[:email], last_name: params[:last_name], password: params[:password])
+    employee = Employee.create(first_name: params[:first_name], email: params[:email], last_name: params[:last_name], job_type: params[:role], password: params[:password])
     organization = Organization.find_or_create_by(name: params[:organization])
-    @employee.organization = organization
+    employee.organization = organization
     skills = params[:skills].map{|skill| Skill.find_or_create_by(description: skill)}
-    @employee.skills = skills
-    if @employee.valid? && @employee.save
-        payload = {employee_id: @employee.id}
+    employee.skills = skills
+    if employee.valid? && employee.save
+        payload = {employee_id: employee.id}
         token = encode_token(payload)
         puts token
-        render json: {employee: @employee, organization: @employee.organization, skills: @employee.skills, jwt: token}
+        render json: {id: employee.id, first_name: employee.first_name, last_name: employee.last_name, job_type: employee.job_type, organization_id: employee.organization_id, email: employee.email, slack_team: employee.slack_team, organization: employee.organization, skills: employee.skills, jwt: token, success: "Welcome back, #{employee.first_name}"}
+        
     else
-        render json: {errors: @employee.errors.full_messages}, status: :not_acceptable
+        render json: {errors: employee.errors.full_messages}, status: :not_acceptable
     end
   end
 
