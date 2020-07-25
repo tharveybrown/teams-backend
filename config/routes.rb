@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get "/user_is_authed", to: "auth#user_is_authed"
   post "/employees", to: "employees#create"
   get "/slack/users", to: "sessions#users"
+  get "/slack/topmessages", to: "channels#top_channel_messages"
   get "/coworkers", to: "employees#index"
   # resources :reviews
   # resources :skills

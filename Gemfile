@@ -24,6 +24,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'jwt'
 gem 'faraday'
 gem 'thin'
+gem 'json'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 gem 'figaro'
@@ -35,7 +36,9 @@ gem 'pry'
 gem 'slack-ruby-bot'
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
-
+gem 'date'
+gem 'ibm_watson'
+gem 'watson-api-client'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

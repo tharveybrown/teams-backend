@@ -19,8 +19,8 @@ class SessionsController < ApplicationController
       slack_team = SlackTeam.find_or_create_by(slack_id: response['team']['id'], name: response['team']['name'], organization_id: session_user.organization.id)
       slack_team.bot_token = bot_access_token
       slack_team.save
-      channels = slack_team.fetch_channels(access_token)['channels'].map{|channel| {name: channel['name'], id: channel['id'], is_private: channel['is_private']}}
-      users = slack_team.users(access_token)
+      channels = slack_team.fetch_channels(access_token)
+      users = slack_team.users(bot_access_token)
       slack_users = users.map{|user| {email: user['profile']['email'], id: user['id'], image: user['profile']['image_72'] , is_admin: user['profile']['is_admin'], slack_team_id: user['team_id'], is_employee: !!Employee.find_by(email:user['profile']['email'] )}}
       render json: {slack: slack_team, slack_token: access_token, slack_users: slack_users, channels: channels}
     else
@@ -28,14 +28,20 @@ class SessionsController < ApplicationController
     end
   end
 
+  def update_channels
+    slack_team = session_user.slack_team
+    channels = slack_team.fetch_channels(slack_team.bot_token)
+  
+  end
+
   def users
     slack_team = session_user.slack_team
     users = slack_team.users(slack_team.bot_token)
     slack_users = users.map{|user| {email: user['profile']['email'], id: user['id'], image: user['profile']['image_72'] , is_admin: user['profile']['is_admin'], slack_team_id: user['team_id'], is_employee: !!Employee.find_by(email:user['profile']['email'] )}}
-    channels = slack_team.fetch_channels(slack_team.bot_token)['channels'].map{|channel| {name: channel['name'], id: channel['id'], is_private: channel['is_private']}}
+    channels = slack_team.channels
     render json: {slack: slack_team, slack_users: slack_users, channels: channels}
   end
-  
-  
+
+
  
 end
