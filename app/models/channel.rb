@@ -1,7 +1,7 @@
 class Channel < ApplicationRecord
   belongs_to :slack_team
   has_many :messages
-
+  has_many :employees, through: :slack_team
 
   def fetch_messages
     resp = Faraday.get("https://slack.com/api/conversations.history") do |req| 

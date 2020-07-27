@@ -10,6 +10,7 @@ class Employee < ApplicationRecord
   has_many :received_reviews, class_name: "Review", foreign_key: "reviewed_id"
   has_and_belongs_to_many :skills
   has_one :slack_team, through: :organization
+  belongs_to :channel
   
   accepts_nested_attributes_for :skills
   # accepts_nested_attributes_for :given_reviews

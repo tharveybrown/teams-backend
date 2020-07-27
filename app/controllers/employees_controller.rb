@@ -3,9 +3,12 @@ class EmployeesController < ApplicationController
 
   def index
     
-    employees = session_user.organization.employees
-    if employees
-      render json: employees.to_json(:include => {:skills => {:only => [:id, :description]}}, :except => [:updated_at, :created_at, :password_digest, :access_token])
+    coworkers = session_user.organization.employees.select{|e| e != session_user}
+    team = session_user.subordinates
+    manager = session_user.manager
+    
+    if coworkers
+      render json: {coworkers: coworkers, manager: manager, team: team}.to_json(:include => {:skills => {:only => [:id, :description]}}, :except => [:updated_at, :created_at, :password_digest, :access_token])
     else 
       render json: {errors: ['no employees found']}, status: 401
     end
@@ -28,6 +31,33 @@ class EmployeesController < ApplicationController
     end
   end
 
+
+  def remove_subordinate
+    session_user.subordinates.delete(Employee.find(params[:id]))
+    index
+  end
+
+
+  def add_employee
+    if !params[:employee]
+      return index
+    end
+    unless session_user.subordinates.include?(params[:employee])
+      session_user.subordinates << Employee.find(params[:id])
+      
+    end
+    index
+  end
+
+  def add_manager
+    if !params[:employee]
+      return index
+    end
+    unless session_user.subordinates.include?(params[:employee])
+      Employee.find(params[:id]).subordinates << session_user
+    end
+    index
+  end
   
 
   private 

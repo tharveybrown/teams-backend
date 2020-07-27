@@ -2,18 +2,34 @@ class WatsonController < ApplicationController
   require "json"
   require "ibm_watson/authenticators"
   require "ibm_watson/personality_insights_v3"
+  require "ibm_watson/natural_language_understanding_v1"
   include IBMWatson
   attr_accessor :url, :apikey
 
   def initialize
     @url = ENV['WATSON_URL']
     @apikey = ENV['WATSON_API_KEY']
+    @language_apikey = ENV['WATSON_LANGUAGE_API_KEY']
+    @language_url = ENV['WATSON_LANGUAGE_URL']
   end
 
   def get_data(input)
+    # language_authenticator = Authenticators::IamAuthenticator.new(
+    #   apikey: @language_apikey
+    # )
+    # natural_language_understanding = NaturalLanguageUnderstandingV1.new(
+    #   version: "2019-07-12",
+    #   authenticator: language_authenticator
+    # )
+    # natural_language_understanding.service_url = @language_url
+    # text = input[:contentItems].map{|c| c[:content]}.join
+    # response = natural_language_understanding.analyze(text: text, features: {entities: {sentiment: true, emotion: true, limit: 10}})
+    # response.result
+
     authenticator = Authenticators::IamAuthenticator.new(
       apikey: @apikey
     )
+
     personality_insights = PersonalityInsightsV3.new(
       version: "2017-10-13",
       authenticator: authenticator
