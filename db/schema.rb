@@ -10,10 +10,49 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_25_215648) do
+ActiveRecord::Schema.define(version: 2020_07_27_202307) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "analysis_metadata", force: :cascade do |t|
+    t.json "personalities_description", default: {}, null: false
+    t.integer "openness"
+    t.integer "adventurousness"
+    t.integer "artistic_interests"
+    t.integer "emotionality"
+    t.integer "imagination"
+    t.integer "intellect"
+    t.integer "authority_challenging"
+    t.integer "conscientiousness"
+    t.integer "achievement_striving"
+    t.integer "cautiousness"
+    t.integer "dutifulness"
+    t.integer "orderliness"
+    t.integer "self_discipline"
+    t.integer "self_efficacy"
+    t.integer "extraversion"
+    t.integer "activity_level"
+    t.integer "assertiveness"
+    t.integer "cheerfulness"
+    t.integer "excitement_seeking"
+    t.integer "outgoing"
+    t.integer "gregariousness"
+    t.integer "agreeableness"
+    t.integer "altruism"
+    t.integer "cooperation"
+    t.integer "modesty"
+    t.integer "uncompromising"
+    t.integer "sympathy"
+    t.integer "trust"
+    t.integer "emotional_range"
+    t.integer "fiery"
+    t.integer "prone_to_worry"
+    t.integer "melancholy"
+    t.integer "immoderation"
+    t.integer "self_consciousness"
+    t.integer "susceptible_to_stress"
+  end
 
   create_table "channels", force: :cascade do |t|
     t.bigint "slack_team_id"
@@ -68,6 +107,48 @@ ActiveRecord::Schema.define(version: 2020_07_25_215648) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "personalities", force: :cascade do |t|
+    t.bigint "channel_id"
+    t.integer "openness"
+    t.integer "adventurousness"
+    t.integer "artistic_interests"
+    t.integer "emotionality"
+    t.integer "imagination"
+    t.integer "intellect"
+    t.integer "authority_challenging"
+    t.integer "conscientiousness"
+    t.integer "achievement_striving"
+    t.integer "cautiousness"
+    t.integer "dutifulness"
+    t.integer "orderliness"
+    t.integer "self_discipline"
+    t.integer "self_efficacy"
+    t.integer "extraversion"
+    t.integer "activity_level"
+    t.integer "assertiveness"
+    t.integer "cheerfulness"
+    t.integer "excitement_seeking"
+    t.integer "outgoing"
+    t.integer "gregariousness"
+    t.integer "agreeableness"
+    t.integer "altruism"
+    t.integer "cooperation"
+    t.integer "modesty"
+    t.integer "uncompromising"
+    t.integer "sympathy"
+    t.integer "trust"
+    t.integer "emotional_range"
+    t.integer "fiery"
+    t.integer "prone_to_worry"
+    t.integer "melancholy"
+    t.integer "immoderation"
+    t.integer "self_consciousness"
+    t.integer "susceptible_to_stress"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["channel_id"], name: "index_personalities_on_channel_id"
+  end
+
   create_table "reviews", force: :cascade do |t|
     t.string "description"
     t.datetime "created_at", precision: 6, null: false
@@ -97,5 +178,6 @@ ActiveRecord::Schema.define(version: 2020_07_25_215648) do
   add_foreign_key "employees", "employees", column: "manager_id"
   add_foreign_key "employees", "organizations"
   add_foreign_key "messages", "channels"
+  add_foreign_key "personalities", "channels"
   add_foreign_key "slack_teams", "organizations"
 end

@@ -5,8 +5,11 @@ Rails.application.routes.draw do
   post "/employees", to: "employees#create"
   get "/slack/users", to: "sessions#users"
   get "/slack/topmessages", to: "channels#top_channel_messages"
-  get "/slack/personality", to: "channels#personality"
+  get "/channel/:id/personalities", to: "channels#personality"
   get "/coworkers", to: "employees#index"
+  get '/analysis_metadata/personalities', to: 'analysis_metadata#personalities'
+  # get '/channel/:id/personalities', to: 'personalities#personality'
+  get 'channels', to: 'channels#index'
   # resources :reviews
   # resources :skills
   post "/employee/delete", to: "employees#remove_subordinate"

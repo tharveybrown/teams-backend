@@ -13,9 +13,11 @@ class ReviewsController < ApplicationController
   end
 
   def request_feedback
+    
     slack_users = session_user.slack_team.users(session_user.slack_team.bot_token)
     params['targetEmployees'].each do |email|
-      slack_id = slack_users.find{|u| u['profile']['email'] == email}['id']
+      slack_id = session_user.slack_team.find_by_email(email)['user']['id']
+      
       if(slack_id)
         notify(slack_id)
       end

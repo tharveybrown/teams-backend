@@ -30,11 +30,7 @@ class SessionsController < ApplicationController
     end
   end
 
-  def update_channels
-    slack_team = session_user.slack_team
-    channels = slack_team.fetch_channels(slack_team.bot_token)
-  
-  end
+
 
   def users
     slack_team = session_user.slack_team
