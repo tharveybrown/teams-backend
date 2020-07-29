@@ -4,7 +4,7 @@ class ChannelsController < ApplicationController
 
   def top_channels
     slack_team = session_user.slack_team
-    
+    channels = slack_team.fetch_channels(slack_team.bot_token)
     top_channels = slack_team.channels.order('num_members DESC').limit(10)
     # byebug
     top_channel_messages = top_channels.map{|channel| {"channel" => channel, "messages"=> channel.messages.first ? true : false}}
