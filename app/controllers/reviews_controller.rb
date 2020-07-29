@@ -4,7 +4,7 @@ class ReviewsController < ApplicationController
     reviewed_employee = Employee.find(params['targetEmployee']['id'])
     reviewer_employee = session_user
     
-    review = session_user.given_reviews.create(reviewed_id: params['targetEmployee']['id'], rating: params['rating'], description: params['feedback'], skill: params['skill'], pending: false)
+    review = session_user.given_reviews.create(reviewed_id: reviewed_employee.id, rating: params['rating'], description: params['feedback'], skill: params['skill'], pending: false)
     if review
       render json: review
     else
@@ -12,10 +12,21 @@ class ReviewsController < ApplicationController
     end
   end
 
+
+  def update 
+    review = Review.find(params[:id])
+    if review.update(description: params[:feedback], rating: params[:rating], pending: false)
+      render json: review 
+    else
+      render json: {errors: ['Unable to update review']}, status: 401
+    end
+  end
+
   def request_feedback
     slack_users = session_user.slack_team.users(session_user.slack_team.bot_token)
     params['targetEmployees'].each do |email|
-      slack_id = slack_users.find{|u| u['profile']['email'] == email}['id']
+      slack_id = session_user.slack_team.find_by_email(email)['user']['id']
+      
       if(slack_id)
         notify(slack_id)
       end
@@ -31,10 +42,11 @@ class ReviewsController < ApplicationController
   end
 
   def received
-    received_reviews = session_user.received_reviews.select{|r| r.reviewer_id}
+    
+    received_reviews = session_user.received_reviews
     if received_reviews.length != 0
-
-      reviews = received_reviews.map{|r| {id: r['id'], description: r['description'], created_at: r['created_at'], skill: r['skill'], rating: r['rating'], pending: r['pending'], reviewer_employee: Employee.find(r['reviewer_id'])}}
+      # reviews = received_reviews
+      reviews = received_reviews.map{|r| {id: r['id'], description: r['description'], created_at: r['created_at'], skill: r['skill'], rating: r['rating'], pending: r['pending'], reviewed_employee: Employee.find(r['reviewer_id'])}}
       render json: reviews.to_json(:except => ['updated_at', 'access_token', 'password_digest'])
     else 
       render json: {errors: ['Unable to find any reviews']}, status: 401
@@ -59,6 +71,10 @@ class ReviewsController < ApplicationController
     resp = con.post('https://slack.com/api/chat.postMessage', {channel: slack_id, text: ":wave: Hi there! #{session_user.first_name} is requesting feedback! \n<#{origin}/new|Follow the link to provide feedback.>"  }, { 'X-Accept'=> 'application/json', 'Authorization'=> "Bearer #{bot_access_token}"})
   end
   
+  private
 
+  def review_params
+    params.require(:review).permit(:skill, :description, :rating)
+  end
 
 end

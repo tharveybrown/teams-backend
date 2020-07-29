@@ -4,9 +4,19 @@ Rails.application.routes.draw do
   get "/user_is_authed", to: "auth#user_is_authed"
   post "/employees", to: "employees#create"
   get "/slack/users", to: "sessions#users"
+  get "/slack/topchannels", to: "channels#top_channels"
+  get "/channel/:id/personalities", to: "channels#personality"
+  get '/channel/:id/keywords', to: "channels#channel_keywords"
   get "/coworkers", to: "employees#index"
+  get '/analysis_metadata/personalities', to: 'analysis_metadata#personalities'
+  # get '/channel/:id/personalities', to: 'personalities#personality'
+  get 'channels', to: 'channels#index'
+  get '/employees/engagement', to: "employees#engagement"
   # resources :reviews
   # resources :skills
+  post "/employee/delete", to: "employees#remove_subordinate"
+  post "employee/add", to: "employees#add_employee"
+  post "manager/add", to: "employees#add_manager"
   get "/auth/callback", to: 'sessions#create'
   get "/feedback/received", to: "reviews#received"
   get "/feedback/given", to: "reviews#given"
