@@ -6,8 +6,8 @@ class ChannelsController < ApplicationController
     slack_team = session_user.slack_team
     # channels = slack_team.fetch_channels(slack_team.bot_token)
     top_channels = slack_team.channels.order('num_members DESC').limit(10)
-    # byebug
-    top_channel_messages = top_channels.map{|channel| {"channel" => channel, "messages"=> channel.messages.first ? true : false}}
+    
+    top_channel_messages = top_channels.map{|channel| {"channel" => channel, "messages"=> channel.fetch_latest_messages.length > 2 ? true : false}}
     sorted_channels = top_channel_messages.sort_by{|m| m['messages'] ? 0 : 1}
     render json: {top_channels: sorted_channels}
     
