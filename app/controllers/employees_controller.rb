@@ -58,6 +58,10 @@ class EmployeesController < ApplicationController
     end
     index
   end
+
+  def engagement
+    session_user.fetch_messages
+  end
   
 
   private 

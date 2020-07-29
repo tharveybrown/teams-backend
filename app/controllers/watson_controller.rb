@@ -13,18 +13,24 @@ class WatsonController < ApplicationController
     @language_url = ENV['WATSON_LANGUAGE_URL']
   end
 
+  def get_keywords(input)
+    language_authenticator = Authenticators::IamAuthenticator.new(
+      apikey: @language_apikey
+    )
+    natural_language_understanding = NaturalLanguageUnderstandingV1.new(
+      version: "2019-07-12",
+      authenticator: language_authenticator
+    )
+    natural_language_understanding.service_url = @language_url
+    
+    response = natural_language_understanding.analyze(text: input, features: {entities: {sentiment: true, emotion: true, limit: 10}})
+    response.result
+  end
+
+
+
   def get_data(input)
-    # language_authenticator = Authenticators::IamAuthenticator.new(
-    #   apikey: @language_apikey
-    # )
-    # natural_language_understanding = NaturalLanguageUnderstandingV1.new(
-    #   version: "2019-07-12",
-    #   authenticator: language_authenticator
-    # )
-    # natural_language_understanding.service_url = @language_url
-    # text = input[:contentItems].map{|c| c[:content]}.join
-    # response = natural_language_understanding.analyze(text: text, features: {entities: {sentiment: true, emotion: true, limit: 10}})
-    # response.result
+    
 
     authenticator = Authenticators::IamAuthenticator.new(
       apikey: @apikey
@@ -133,4 +139,20 @@ class WatsonController < ApplicationController
       return result
     end
   end
+
+  def analyze_keywords(input)
+    result = {}
+    raw_data = self.get_keywords(input)
+
+    if raw_data['code'] == 400
+      return raw_data['error']
+    else
+      
+      keywords = raw_data['entities'].map{|entity| {keyword: entity['text'], sentiment: {score: (entity['sentiment']['score'] * 100).to_i, label: entity['sentiment']['label']}, emotions: entity['emotion'].map{|k, e| {k => e*100.to_i}}}}
+      result[:keywords] = keywords
+
+      return result
+    end
+  end
+
 end

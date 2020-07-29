@@ -13,7 +13,7 @@ class SlackTeam < ApplicationRecord
         response = self.request_channels(response['response_metadata']['next_cursor'] )
         slack_channels << response['channels']
       end  
-    slack_channels.flatten.map{|channel| Channel.find_or_create_by(slack_id: channel['id']).update(slack_team: self, name: channel['name'], slack_id: channel['id'], topic: channel['topic'], num_members: channel['num_members'])}
+    slack_channels.flatten.map{|channel| Channel.find_or_create_by(slack_id: channel['id']).update(slack_team: self, name: channel['name'], slack_id: channel['id'], topic: channel['topic']['value'], num_members: channel['num_members'])}
     self.channels
   end
 
