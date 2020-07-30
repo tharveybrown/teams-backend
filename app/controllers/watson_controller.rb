@@ -13,29 +13,10 @@ class WatsonController < ApplicationController
     @language_url = ENV['WATSON_LANGUAGE_URL']
   end
 
-  def get_keywords(input)
-    language_authenticator = Authenticators::IamAuthenticator.new(
-      apikey: @language_apikey
-    )
-    natural_language_understanding = NaturalLanguageUnderstandingV1.new(
-      version: "2019-07-12",
-      authenticator: language_authenticator
-    )
-    natural_language_understanding.service_url = @language_url
-    
-    response = natural_language_understanding.analyze(text: input, features: {entities: {sentiment: true, emotion: true, limit: 10}})
-    response.result
-  end
-
-
-
   def get_data(input)
-    
-
     authenticator = Authenticators::IamAuthenticator.new(
       apikey: @apikey
     )
-
     personality_insights = PersonalityInsightsV3.new(
       version: "2017-10-13",
       authenticator: authenticator
@@ -50,6 +31,26 @@ class WatsonController < ApplicationController
     )
     profile.result
   end
+
+  def get_keywords(input)
+    language_authenticator = Authenticators::IamAuthenticator.new(
+      apikey: @language_apikey
+    )
+    natural_language_understanding = NaturalLanguageUnderstandingV1.new(
+      version: "2019-07-12",
+      authenticator: language_authenticator
+    )
+    natural_language_understanding.service_url = @language_url
+    
+    keywords = natural_language_understanding.analyze(text: input, features: {keywords: {sentiment: true, emotion: true, limit: 10}})
+    entities = natural_language_understanding.analyze(text: input, features: {entities: {sentiment: true, emotion: true, limit: 10}})
+    {'entities': entities.result['entities'], 'keywords': keywords.result['keywords']}
+    # entities.result
+  end
+
+
+
+ 
 
   def to_symbol_helper(key)
     key.gsub(" ", "_").gsub("-", "_").gsub("&", "_and_").downcase.truncate(60).to_sym
@@ -85,7 +86,6 @@ class WatsonController < ApplicationController
     raw_needs.each do |need|
       need_name = self.to_symbol_helper(need['name'])
       need_percentile = self.percentile_conversion_helper(need['percentile'])
-
       result[need_name] = need_percentile
     end
 
@@ -143,14 +143,15 @@ class WatsonController < ApplicationController
   def analyze_keywords(input)
     result = {}
     raw_data = self.get_keywords(input)
-
+    
     if raw_data['code'] == 400
       return raw_data['error']
     else
       
-      keywords = raw_data['entities'].map{|entity| {keyword: entity['text'], sentiment: {score: (entity['sentiment']['score'] * 100).to_i, label: entity['sentiment']['label']}, emotions: entity['emotion'].map{|k, e| {k => e*100.to_i}}}}
+      keywords = raw_data[:keywords].map{|entity| {keyword: entity['text'], sentiment: {score: (entity['sentiment']['score'] * 100).to_i, label: entity['sentiment']['label']}, emotions: entity['emotion'].map{|k, e| {k => e*100.to_i}}}}
+      entities = raw_data[:entities].map{|entity| {entity: entity['text'], sentiment: {score: (entity['sentiment']['score'] * 100).to_i, label: entity['sentiment']['label']}, emotions: entity['emotion'].map{|k, e| {k => e*100.to_i}}}}
       result[:keywords] = keywords
-
+      result[:entities] = entities
       return result
     end
   end

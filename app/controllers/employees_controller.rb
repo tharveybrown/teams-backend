@@ -63,6 +63,20 @@ class EmployeesController < ApplicationController
     session_user.fetch_messages
   end
   
+  def destroy
+    employee = Employee.find(params[:id])
+    employee.destroy
+    
+    employee.delete
+    if employee.destroyed?
+      render json: {
+        status: 200,
+        message: "success"
+      }
+    else
+      render json: {errors: employee.errors, status: 422}
+    end
+  end
 
   private 
 

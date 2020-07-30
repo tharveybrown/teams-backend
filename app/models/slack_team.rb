@@ -8,7 +8,6 @@ class SlackTeam < ApplicationRecord
       slack_channels = []
       response = self.request_channels
       slack_channels << response['channels']
-      
       while !response['response_metadata']['next_cursor'].empty?
         response = self.request_channels(response['response_metadata']['next_cursor'] )
         slack_channels << response['channels']
