@@ -32,7 +32,7 @@ class ReviewsController < ApplicationController
       end
     end
     pending_reviewer_ids = params['targetEmployees'].map{|emp| Employee.find_by(email: emp).id}
-    pending_reviews = pending_reviewer_ids.map{|emp| session_user.received_reviews.create(reviewer_id: emp, pending: params['pending'], skill: params['skill'])}
+    pending_reviews = pending_reviewer_ids.map{|emp| session_user.received_reviews.create(reviewer_id: emp, pending: true, skill: params['skill'])}
     if !pending_reviews.empty?
       render json: pending_reviews.to_json(:except => ['updated_at', 'rating', 'description'])
     else
@@ -46,8 +46,9 @@ class ReviewsController < ApplicationController
     received_reviews = session_user.received_reviews
     if received_reviews.length != 0
       # reviews = received_reviews
-      reviews = received_reviews.map{|r| {id: r['id'], description: r['description'], created_at: r['created_at'], skill: r['skill'], rating: r['rating'], pending: r['pending'], reviewed_employee: Employee.find(r['reviewer_id'])}}
-      render json: reviews.to_json(:except => ['updated_at', 'access_token', 'password_digest'])
+      # reviews = received_reviews.map{|r| {id: r['id'], description: r['description'], created_at: r['created_at'], skill: r['skill'], rating: r['rating'], pending: r['pending'], reviewed_employee: Employee.find(r['reviewer_id'])}}
+      # render json: reviews.to_json(:except => ['updated_at', 'access_token', 'password_digest'])
+      render json: received_reviews.to_json(:include => {:reviewed_employee => {:only => [:id, :first_name, :last_name, :email]}}, :except => [:access_token, :updated_at])
     else 
       render json: {errors: ['Unable to find any reviews']}, status: 401
     end
@@ -55,10 +56,14 @@ class ReviewsController < ApplicationController
 
   def given
     given_reviews = session_user.given_reviews
+    
     if given_reviews.length != 0
       
-      reviews = given_reviews.map{|r| {id: r['id'], description: r['description'], created_at: r['created_at'], skill: r['skill'], rating: r['rating'], pending: r['pending'], reviewed_employee: Employee.find(r['reviewed_id'])}}
-      render json: reviews.to_json(:except => ['updated_at', 'access_token', 'password_digest'])
+
+      # reviews = given_reviews.map{|r| {id: r['id'], description: r['description'], created_at: r['created_at'], skill: r['skill'], rating: r['rating'], pending: r['pending'], reviewed_employee: Employee.find(r['reviewed_id'])}}
+      # render json: reviews.to_json(:except => ['updated_at', 'access_token', 'password_digest'])
+      render json: given_reviews.to_json(:include => {:reviewed_employee => {:only => [:id, :first_name, :last_name, :email]}}, :except => [:access_token, :updated_at])
+
     else 
       render json: {errors: ['Unable to find any reviews']}, status: 401
     end

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get '/employees/engagement', to: "employees#engagement"
   # resources :reviews
   # resources :skills
+  get "channels/update", to: 'channels#fetch_update'
   post "/employee/delete", to: "employees#remove_subordinate"
   post "employee/add", to: "employees#add_employee"
   post "manager/add", to: "employees#add_manager"
@@ -23,7 +24,7 @@ Rails.application.routes.draw do
   post "/feedback/request", to: "reviews#request_feedback"
   resources :reviews
   resources :skills
-  resources :employees
+  resources :employees, only: [:create, :show, :index, :destroy, :update]
   resources :organizations
   
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
