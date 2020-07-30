@@ -59,8 +59,8 @@ class ChannelsController < ApplicationController
     
     latest_messages = channel.fetch_latest_messages
     
-    if !latest_messages[0]['text']
-      return render json: latest_messages, status: 422
+    if latest_messages.length == 2
+      return render json: {errors: ["You must /invite @webbed to this channel first"]}, status: 422
     end
     message_content = channel.messages.map{|m| {"content": m.text, "contenttype": "text/plain", "created": Time.new(m.ts).to_i, "id": m.slack_id,  "language": "en"}}
     content = {"contentItems": message_content}
