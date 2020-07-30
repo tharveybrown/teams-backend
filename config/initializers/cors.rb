@@ -17,7 +17,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'https://localhost:3000', 'http://localhost:3000' ,  'https://murmuring-escarpment-97300.herokuapp.com', 'http://www.webbed.us'
+    origins 'https://localhost:3000', 'http://localhost:3000' ,  'https://murmuring-escarpment-97300.herokuapp.com', 'https://www.webbed.us'
   # 
     resource '*',
       headers: :any,
