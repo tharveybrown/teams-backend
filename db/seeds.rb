@@ -39,3 +39,39 @@ api_v1_metadata.personalities_description = {
   "Intellect / Intellectual curiosity": "Are intellectually curious and tend to think in symbols and abstractions. With artistic interests, this facet is one of the two most important, central aspects of this characteristic.",
   "Liberalism / Authority challenging / Tolerance for diversity": "Have a readiness to challenge authority, convention, and traditional values."
 }
+# slack_team = SlackTeam.find(7)
+# resp = Faraday.get("https://slack.com/api/conversations.members?token=#{slack_team.bot_token}&channel=C011Z40UK2A")
+# members = JSON.parse(resp.body)['members']
+# users = []
+
+# members.each do |id|
+#   user_resp = Faraday.get("https://slack.com/api/users.info?token=#{slack_team.bot_token}&user=#{id}")
+#   body = JSON.parse(user_resp.body)['user']
+#   user_email = body['profile']['email']
+#   first_name = body['profile']['first_name']
+#   last_name = body['profile']['last_name']
+#   if user_email
+#     users << {email: user_email, first_name: first_name, last_name: last_name}
+#   end
+# end
+# skill_1 = Skill.all.first
+# skill_2 = Skill.all.last
+# skill_3 = Skill.find(3)
+
+# puts users
+# thea = Employee.find_by(email: "tharveybrown@gmail.com")
+# organization = Organization.find_by(name: 'Flatiron')
+# users.each do |user|
+#   new_user = Employee.find_or_create_by(email: user[:email], 
+#     first_name: user[:first_name], 
+#     last_name: user[:last_name],
+#     organization: organization, job_type: 'Employee')  do |n|
+#       n.password = "Welcome1"
+#       n.manager = thea
+#     end
+#   new_user.skills = [skill_1, skill_2, skill_3]
+
+  
+  
+end
+
