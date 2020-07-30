@@ -56,6 +56,7 @@ class ChannelsController < ApplicationController
 
   def personality
     channel = Channel.find(params[:id])
+    
     latest_messages = channel.fetch_latest_messages
     
     if !latest_messages[0]['text']
