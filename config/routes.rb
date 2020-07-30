@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get '/employees/engagement', to: "employees#engagement"
   # resources :reviews
   # resources :skills
+  get "channels/update", to: 'channels#fetch_update'
   post "/employee/delete", to: "employees#remove_subordinate"
   post "employee/add", to: "employees#add_employee"
   post "manager/add", to: "employees#add_manager"

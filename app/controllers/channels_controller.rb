@@ -34,13 +34,24 @@ class ChannelsController < ApplicationController
   
   def index
     slack_team = session_user.slack_team
-    channels = slack_team.fetch_channels(slack_team.bot_token)
+    
     channels = slack_team.channels
     if channels 
       render json: {channels: channels}
     else
       render json: {errors: ["Unable to find channels"]}, status: 422
     end
+  end
+
+  def fetch_update
+    slack_team = session_user.slack_team
+    channels = slack_team.fetch_channels(slack_team.bot_token)
+    if channels 
+      render json: {channels: channels}
+    else
+      render json: {errors: ["Unable to find channels"]}, status: 422
+    end
+  
   end
 
   def personality
