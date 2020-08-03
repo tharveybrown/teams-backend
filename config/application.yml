@@ -17,4 +17,3 @@ WATSON_URL: "https://api.us-south.personality-insights.watson.cloud.ibm.com/inst
 WATSON_API_KEY: "9BXlbUAFvkYUOXGvTd4mk3e_KnuzxOX3_F9rnpSoiRsH"
 WATSON_LANGUAGE_URL: "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/4c366c50-670c-4ddb-bdec-d2be744fd5d3"
 WATSON_LANGUAGE_API_KEY: "Zjo8iE7SsxdhIXY0bKAu7SwZSTRt-vTTBC8x9VSLsLHD"
-SEED_PASSWORD: "Welcome1"
